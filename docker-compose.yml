@@ -34,5 +34,18 @@ services:
     ports:
       - "8081:8081"
 
+  catalogo-service:
+    build: ./catalogo-service
+    container_name: catalogo_service
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DB_URL: jdbc:postgresql://db:5432/catalogo_db
+      DB_USER: ${POSTGRES_USER}
+      DB_PASSWORD: ${POSTGRES_PASSWORD}
+      JWT_SECRET: ${JWT_SECRET}
+    ports:
+      - "8082:8082"
 volumes:
   paolicias_data:
