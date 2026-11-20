@@ -1,4 +1,4 @@
-package cl.paolicias.catalogoservice;
+package cl.paolicias.catalogo;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
