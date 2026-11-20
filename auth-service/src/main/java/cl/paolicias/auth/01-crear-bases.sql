@@ -1,0 +1,4 @@
+CREATE DATABASE auth_db;
+CREATE DATABASE catalogo_db;
+CREATE DATABASE reservas_db;
+CREATE DATABASE pagos_db;
