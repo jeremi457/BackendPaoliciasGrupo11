@@ -47,5 +47,24 @@ services:
       JWT_SECRET: ${JWT_SECRET}
     ports:
       - "8082:8082"
+
+  reservas-service:
+    build: ./reservas-service
+    container_name: reservas_service
+    depends_on:
+      db:
+        condition: service_healthy
+      catalogo-service:
+        condition: service_started
+    environment:
+      DB_URL: jdbc:postgresql://db:5432/reservas_db
+      DB_USER: ${POSTGRES_USER}
+      DB_PASSWORD: ${POSTGRES_PASSWORD}
+      JWT_SECRET: ${JWT_SECRET}
+      INTERNAL_KEY: ${INTERNAL_KEY}
+      CATALOGO_URL: http://catalogo-service:8082
+    ports:
+      - "8083:8083"
+
 volumes:
   paolicias_data:
