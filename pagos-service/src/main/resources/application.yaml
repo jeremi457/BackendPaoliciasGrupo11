@@ -1,0 +1,28 @@
+server:
+  port: 8084
+  address: 0.0.0.0
+  error:
+    include-message: always
+
+spring:
+  application:
+    name: pagos-service
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5434/pagos_db}
+    username: ${DB_USER:paolicias}
+    password: ${DB_PASSWORD:cambiar_esta_clave}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    open-in-view: false
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 6MB
+
+app:
+  jwt:
+    secret: ${JWT_SECRET}
+  internal-key: ${INTERNAL_KEY}
+  reservas:
+    url: ${RESERVAS_URL:http://localhost:8083}
