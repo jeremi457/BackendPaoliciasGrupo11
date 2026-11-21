@@ -66,5 +66,23 @@ services:
     ports:
       - "8083:8083"
 
+  pagos-service:
+    build: ./pagos-service
+    container_name: pagos_service
+    depends_on:
+      db:
+        condition: service_healthy
+      reservas-service:
+        condition: service_started
+    environment:
+      DB_URL: jdbc:postgresql://db:5432/pagos_db
+      DB_USER: ${POSTGRES_USER}
+      DB_PASSWORD: ${POSTGRES_PASSWORD}
+      JWT_SECRET: ${JWT_SECRET}
+      INTERNAL_KEY: ${INTERNAL_KEY}
+      RESERVAS_URL: http://reservas-service:8083
+    ports:
+      - "8084:8084"
+
 volumes:
   paolicias_data:
