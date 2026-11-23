@@ -9,8 +9,8 @@ spring:
     name: pagos-service
   datasource:
     url: ${DB_URL:jdbc:postgresql://localhost:5434/pagos_db}
-    username: ${DB_USER:paolicias}
-    password: ${DB_PASSWORD:cambiar_esta_clave}
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
   jpa:
     hibernate:
       ddl-auto: update
@@ -25,4 +25,4 @@ app:
     secret: ${JWT_SECRET}
   internal-key: ${INTERNAL_KEY}
   reservas:
-    url: ${RESERVAS_URL:http://localhost:8083}
+    url: ${RESERVAS_URL:https://reservas-service-5syk.onrender.com}
