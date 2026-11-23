@@ -9,8 +9,8 @@ spring:
     name: reservas-service
   datasource:
     url: ${DB_URL:jdbc:postgresql://localhost:5434/reservas_db}
-    username: ${DB_USER:paolicias}
-    password: ${DB_PASSWORD:cambiar_esta_clave}
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
   jpa:
     hibernate:
       ddl-auto: update
@@ -21,4 +21,4 @@ app:
     secret: ${JWT_SECRET}
   internal-key: ${INTERNAL_KEY}
   catalogo:
-    url: ${CATALOGO_URL:http://localhost:8082}
+    url: ${CATALOGO_URL:https://catalogo-service-m6mq.onrender.com}

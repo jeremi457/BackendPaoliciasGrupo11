@@ -8,8 +8,8 @@ spring:
       name: catalogo-service
     datasource:
       url: ${DB_URL:jdbc:postgresql://localhost:5434/catalogo_db}
-      username: ${DB_USER:paolicias}
-      password: ${DB_PASSWORD:cambiar_esta_clave}
+      username: ${DB_USER}
+      password: ${DB_PASSWORD}
     jpa:
       hibernate:
         ddl-auto: update
