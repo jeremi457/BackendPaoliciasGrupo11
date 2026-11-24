@@ -10,14 +10,22 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+import cl.paolicias.catalogo.entities.ImagenProducto;
+import cl.paolicias.catalogo.repository.ImagenProductoRepository;
+import java.io.IOException;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
 public class ProductoServiceImpl implements ProductoService {
     private static final Set<String> IMAGENES =
             Set.of("torta", "cup", "mesa", "coffe", "catering", "galleta",
-                    "mini");
+                    "mini", "foto");
+    private static final long MAX_BYTES = 5L * 1024 * 1024;
     private final ProductoRepository repository;
+    private final ImagenProductoRepository imagenRepository;
+
     @Override
     public List<Producto> listarActivos() {
         return repository.findByActivoTrueOrderByIdAsc();
@@ -84,5 +92,43 @@ public class ProductoServiceImpl implements ProductoService {
 
     private ResponseStatusException error(String mensaje) {
         return new ResponseStatusException(HttpStatus.BAD_REQUEST, mensaje);
+    }
+
+    @Override
+    @Transactional
+    public Producto guardarImagen(Long id, MultipartFile archivo) {
+        if (archivo == null || archivo.isEmpty()) {
+            throw error("Selecciona la foto del producto.");
+        }
+        if (archivo.getSize() > MAX_BYTES) {
+            throw error("La foto supera los 5 MB.");
+        }
+        String tipo = archivo.getContentType();
+        if (tipo == null || !(tipo.equals("image/jpeg") || tipo.equals("image/png"))) {
+            throw error("La foto debe ser JPG o PNG.");
+        }
+        Producto producto = obtener(id);
+        byte[] datos;
+        try {
+            datos = archivo.getBytes();
+        } catch (IOException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.INTERNAL_SERVER_ERROR, "No se pudo leer la foto.");
+        }
+        ImagenProducto imagen = imagenRepository.findByProductoId(id)
+                .orElseGet(ImagenProducto::new);
+        imagen.setProductoId(id);
+        imagen.setContentType(tipo);
+        imagen.setDatos(datos);
+        imagenRepository.save(imagen);
+        producto.setImagen("foto");
+        return repository.save(producto);
+    }
+
+    @Override
+    public ImagenProducto obtenerImagen(Long id) {
+        return imagenRepository.findByProductoId(id).orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                        "El producto no tiene foto."));
     }
 }

@@ -16,6 +16,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import cl.paolicias.catalogo.entities.ImagenProducto;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/productos")
@@ -53,5 +58,19 @@ public class ProductoController {
     public Producto cambiarActivo(@PathVariable Long id, @RequestBody
     ActivoRequest request) {
         return service.cambiarActivo(id, request);
+    }
+
+    @PostMapping(value = "/{id}/imagen", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public Producto subirImagen(@PathVariable Long id,
+                                @RequestParam("archivo") MultipartFile archivo) {
+        return service.guardarImagen(id, archivo);
+    }
+
+    @GetMapping("/{id}/imagen")
+    public ResponseEntity<byte[]> obtenerImagen(@PathVariable Long id) {
+        ImagenProducto imagen = service.obtenerImagen(id);
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(imagen.getContentType()))
+                .body(imagen.getDatos());
     }
 }
